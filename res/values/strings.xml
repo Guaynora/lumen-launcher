@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="a11y_desc">Hace que el botón Inicio del control abra Lumen. No lee ni guarda nada de lo que ves en pantalla.</string>
+</resources>
