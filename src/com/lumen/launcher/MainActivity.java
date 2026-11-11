@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** Lumen: launcher mínimo para Android TV. Sin recomendaciones, sin red, sin servicios en segundo plano. */
+/** Lumen: minimal Android TV launcher. No recommendations, no network, no background services. */
 public class MainActivity extends Activity {
 
     static final int BG = 0xFF151B24, BG2 = 0xFF22304A, TILE = 0xFF1E2633, FG = 0xFFE9EDF3,
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
     final List<View> appTiles = new ArrayList<>();
     TextView ram;
     String appSig = "";
-    /** paquete -> etiqueta, en el orden mostrado (incluye ocultas). */
+    /** package -> label, in display order (hidden apps included). */
     final LinkedHashMap<String, String> allApps = new LinkedHashMap<>();
     final Map<String, ResolveInfo> infos = new LinkedHashMap<>();
 
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
         col.setClipChildren(false);
         col.setClipToPadding(false);
         root.setClipChildren(false);
-        // Fondo opcional: Android/data/com.lumen.launcher/files/fondo.jpg, a la derecha con degradado para que se lea el texto
+        // Optional background: Android/data/com.lumen.launcher/files/fondo.jpg, right-aligned with a gradient so text stays readable
         bgImage = new ImageView(this);
         bgImage.setScaleType(ImageView.ScaleType.FIT_END);
         root.addView(bgImage, new FrameLayout.LayoutParams(-1, -1));
@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
         pageScroll.addView(col, new FrameLayout.LayoutParams(-1, -2));
         root.addView(pageScroll, new FrameLayout.LayoutParams(-1, -1));
 
-        // Encabezado: hora, fecha y RAM libre
+        // Header: time, date and free RAM
         LinearLayout top = new LinearLayout(this);
         top.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout when = new LinearLayout(this);
@@ -385,7 +385,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    /** Permite ocultar apps desde la PC: un paquete por línea en Android/data/com.lumen.launcher/files/ocultar.txt */
+    /** Lets you hide apps from a PC: one package per line in Android/data/com.lumen.launcher/files/ocultar.txt */
     void importHidden() {
         File dir = getExternalFilesDir(null);
         if (dir == null) return;
@@ -418,7 +418,7 @@ public class MainActivity extends Activity {
                 }).show();
     }
 
-    // ---------- Entradas ----------
+    // ---------- Inputs ----------
 
     void buildInputs() {
         inputRow.removeAllViews();
@@ -474,12 +474,12 @@ public class MainActivity extends Activity {
         Uri u = TvContract.buildChannelUriForPassthroughInput(id);
         Intent i = new Intent(Intent.ACTION_VIEW).setDataAndType(u, "vnd.android.cursor.item/channel")
                 .setPackage("com.google.android.tv.inputplayer").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        try { startActivity(i); return; } catch (ActivityNotFoundException e) { /* probar sin paquete */ }
+        try { startActivity(i); return; } catch (ActivityNotFoundException e) { /* retry without a package */ }
         i.setPackage(null);
         start(i, "No se pudo cambiar a " + label);
     }
 
-    // ---------- Sistema ----------
+    // ---------- System ----------
 
     void buildSystem() {
         inputsTile = textTile("Entradas", "", false);
@@ -520,7 +520,7 @@ public class MainActivity extends Activity {
         }, 1500);
     }
 
-    /** El launcher de Google queda vivo en segundo plano: lo cerramos para que no ocupe RAM. */
+    /** The Google launcher stays alive in the background: kill it so it does not hold RAM. */
     final Runnable killGoogle = () -> {
         if (HomeService.googleMode) return;
         ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
@@ -635,7 +635,7 @@ public class MainActivity extends Activity {
         @Override public void run() { updateRam(); h.postDelayed(this, 5000); }
     };
 
-    // ---------- Ciclo de vida ----------
+    // ---------- Lifecycle ----------
 
     @Override protected void onResume() {
         super.onResume();
@@ -661,7 +661,7 @@ public class MainActivity extends Activity {
         if (!appTiles.isEmpty()) appTiles.get(0).requestFocus();
     }
 
-    @Override public void onBackPressed() { /* es la pantalla de inicio: no hay a dónde volver */ }
+    @Override public void onBackPressed() { /* this is the home screen: there is nowhere to go back to */ }
 
     void start(Intent i, String err) {
         try { startActivity(i); } catch (Exception e) { toast(err); }

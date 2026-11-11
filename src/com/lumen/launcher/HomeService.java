@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 
-/** Manda el botón Inicio a Lumen. Solo mira la tecla HOME y cuándo aparece la pantalla de Google TV. */
+/** Routes the Home button to Lumen. Only watches the HOME key and when the Google TV home screen appears. */
 public class HomeService extends AccessibilityService {
-    /** true cuando el usuario abrió Google TV a propósito desde Lumen. */
+    /** true when the user deliberately opened Google TV from Lumen. */
     static volatile boolean googleMode = false;
 
     @Override protected boolean onKeyEvent(KeyEvent e) {
